@@ -20,9 +20,9 @@ describe('CoursesService', () => {
       ]
     });
 
-    coursesService = TestBed.get(CoursesService);
+    coursesService = TestBed.inject(CoursesService);
 
-    httpTestingController = TestBed.get(HttpTestingController);
+    httpTestingController = TestBed.inject(HttpTestingController);
 
   });
 
