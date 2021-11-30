@@ -26,7 +26,7 @@ describe('CoursesCardListComponent', () => {
         CommonModule  // important module that makes important directives work like ngIf, ngFor, etc.
       ]
     }).compileComponents()  // going to get back a promise, that will get resolved when the compilation process is finished
-      .then(() => {  // the then block is necessary to execute the code. The best practive is to initialize the variables in this block.
+      .then(() => {  // the then block is necessary to execute the code. The best practice is to initialize the variables in this block.
 
         fixture = TestBed.createComponent(CoursesCardListComponent);  // creating a component fixture
         component = fixture.componentInstance;  // grabbing an instance of the component itself.
