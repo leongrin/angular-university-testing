@@ -106,7 +106,7 @@ describe('HomeComponent', () => {
   });
 
 
-  it('should display advanced courses when tab clicked', (done) => {
+  it('should display advanced courses when tab clicked - fakeAsync', fakeAsync(() => {
 
     coursesServ.findAllCourses.and.returnValue(of(allCourses));
 
@@ -122,23 +122,47 @@ describe('HomeComponent', () => {
 
     fixture.detectChanges();  // updating the content of the DOM
 
-    setTimeout(() => {
+    flush();
 
-      const cardTitles = el.queryAll(By.css('.mat-card-title'));
+    const cardTitles = el.queryAll(By.css('.mat-tab-body-active .mat-card-title'));
 
-      expect(cardTitles.length).toBeGreaterThan(0, 'no card titles found');
+    expect(cardTitles.length).toBeGreaterThan(0, 'no card titles found');
 
-      console.log(`first card title => ${cardTitles[0].nativeElement.textContent}`);
-
-      expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security', 'first card does not contain security');
-
-      done();
-
-    }, 2000);
+    expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security', 'first card does not contain security');
 
     /*pending();*/
 
-  });
+  }));
+
+
+  /*Always give priority to use fakeAsync over waitForAsync, because it's better organized*/
+  fit('should display advanced courses when tab clicked - waitForAsync', waitForAsync(() => {
+
+    coursesServ.findAllCourses.and.returnValue(of(allCourses));
+
+    fixture.detectChanges();
+
+    const tabs = el.queryAll(By.css('.mat-tab-label'));
+
+    /*el.nativeElement.click(tabs[1]);*/  // alternative to the click method below
+    click(tabs[1]);  // to simplify the code, we are using this click utility from the address /common/test-utils
+
+    console.log(`tabs[0] => ${tabs[0].nativeElement.textContent}`);
+    console.log(`tabs[1] => ${tabs[1].nativeElement.textContent}`);
+
+    fixture.detectChanges();  // updating the content of the DOM
+
+    fixture.whenStable().then(() => {
+
+      console.log('Calling whenStable');
+      const cardTitles = el.queryAll(By.css('.mat-tab-body-active .mat-card-title'));
+      expect(cardTitles.length).toBeGreaterThan(0, 'no card titles found');
+      expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security', 'first card does not contain security');
+    });
+
+    /*pending();*/
+
+  }));
 
 });
 

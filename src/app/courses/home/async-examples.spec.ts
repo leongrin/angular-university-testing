@@ -1,7 +1,9 @@
 /*f at the beginning to focus on running only this test => fdescribe*/
 import {fakeAsync, flush, flushMicrotasks, tick} from '@angular/core/testing';
+import {of} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
-fdescribe('async testing examples', () => {
+describe('async testing examples', () => {
 
 
   it('Asynchronous test example with jasmine done() ', (done) => {
@@ -74,7 +76,7 @@ fdescribe('async testing examples', () => {
 
 
 
-  fit('Asynchronous test example - Promises + setTimeout()', fakeAsync (() => {
+  it('Asynchronous test example - Promises + setTimeout()', fakeAsync (() => {
 
     let counter = 0;
 
@@ -102,9 +104,31 @@ fdescribe('async testing examples', () => {
     tick(500);
 
     expect(counter).toBe(11);
+  }));
 
 
 
+  /*Some observables are synchronous and others are asynchronous, like the delay that uses the setTimeout(). When async, it needs to use
+   fakeAsync*/
+  it('Asynchronous test example - Observables', fakeAsync (() => {
+
+    let test = false;
+
+    console.log('Creating observable');
+
+    const test$ = of(test).pipe(delay(1000));
+
+    test$.subscribe(() => {
+
+      test = true;
+
+    });
+
+    tick(1000);
+
+    console.log('Running observable test assertions');
+
+    expect(test).toBeTruthy();
 
   }));
 
